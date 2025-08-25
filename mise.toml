@@ -1,0 +1,21 @@
+[tools]
+uv = '0.5.7'
+
+[env]
+_.python.venv = {path = ".venv", create = true}
+
+[hooks]
+# automatically install tools upon entering the repo
+enter = "mise install && uv sync"
+
+[settings]
+# experimental must be set to true for mise install hook
+experimental = true
+activate_aggressive = true
+
+[settings.python]
+uv_venv_auto = true
+
+[settings.pipx]
+uvx = true
+

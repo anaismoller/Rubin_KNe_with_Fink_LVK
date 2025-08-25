@@ -1,0 +1,43 @@
+[project]
+name = "KNLVK"
+description = "KNLVK"
+readme = "README.md"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "loguru",
+    "numpy>=2.2",
+    "pandas>=2.3.1",
+    "matplotlib",
+    "plotly",
+    "astropy",
+    "ipykernel",
+    "scipy",
+    "Jinja2"
+]
+
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.2",
+    "ruff",
+]
+
+[tool.ruff]
+# Set the maximum line length to 150.
+line-length = 150
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+docstring-code-format = true
+
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
+# overlap with the use of a formatter, like Black, but we can override this behavior by
+# explicitly adding the rule.
+extend-select = ["E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
