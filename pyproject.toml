@@ -13,7 +13,10 @@ dependencies = [
     "astropy",
     "ipykernel",
     "scipy",
-    "Jinja2"
+    "Jinja2",
+    "pyarrow",
+    "fastparquet",
+    "fink-utils"
 ]
 
 

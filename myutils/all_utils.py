@@ -75,8 +75,18 @@ def convert_fluxcal_to_mag(df):
     """
     # Convert fluxcal to magnitude
     df = df.copy()
-    df["magnitude"] = -2.5 * np.log10(df["FLUXCAL"]) + 27.5
-    df["magnitude error"] = 2.5 / np.log(10) * df["FLUXCALERR"] / df["FLUXCAL"]
+    with np.errstate(invalid='ignore', divide='ignore'):
+        df["magnitude"] = np.where(
+            df["FLUXCAL"] > 0,
+            -2.5 * np.log10(df["FLUXCAL"]) + 27.5,
+            np.nan
+        )
+        df["magnitude error"] = np.where(
+            df["FLUXCAL"] > 0,
+            2.5 / np.log(10) * df["FLUXCALERR"] / df["FLUXCAL"],
+            np.nan
+        )
+    
     return df
 
 def read_fits(fname, drop_separators=False):
@@ -138,6 +148,7 @@ def read_fits(fname, drop_separators=False):
     # Initialize new columns
     df_header["in_ddf_field"] = False
     df_header["ddf_field_name"] = np.nan
+    df_header["ddf_field_name"] = df_header["ddf_field_name"].astype("object")  # Ensure dtype is object
 
     # Convert df_header RA/DEC to SkyCoord
     coords_header = SkyCoord(ra=df_header["RA"].values * u.deg,
