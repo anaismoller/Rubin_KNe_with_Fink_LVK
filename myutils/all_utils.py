@@ -616,3 +616,77 @@ def plot_lc_subplots_matplotlib(df_phot, df_header, idx, inmag=False, convert_da
     if savefig:
         plt.savefig(f"{path_plots}/lc_subplot_{idx}_z_{sel_header.REDSHIFT_FINAL.values[0]:.2f}_{sel_header.in_ddf_field.values[0]}.png")
 
+
+def create_filtering_statistics(df_original, n_alerts_year, filtering_stages):
+    """
+    Create a comprehensive statistics DataFrame for all filtering stages
+    
+    Parameters:
+    -----------
+    df_original : pd.DataFrame
+        Original dataframe before any cuts
+    n_alerts_year : int
+        Total number of alerts for the year
+    filtering_stages : list of tuples
+        Each tuple contains (stage_name, dataframe_after_cuts, description)
+        
+    Returns:
+    --------
+    pd.DataFrame : Statistics table with all filtering information
+    """
+    
+    stats_data = []
+    
+    # Helper function to get top 3 most common finkclasses with percentages
+    def get_top3_finkclasses(df):
+        if len(df) == 0:
+            return "No data"
+        
+        finkclass_counts = df['finkclass'].value_counts()
+        top3 = finkclass_counts.head(3)
+        
+        result_parts = []
+        for finkclass, count in top3.items():
+            percentage = (count / len(df)) * 100
+            result_parts.append(f"{finkclass} ({percentage:.1f}%)")
+        
+        return "; ".join(result_parts)
+    
+    # Add original data as first row
+    top3_orig = get_top3_finkclasses(df_original)
+    stats_data.append({
+        'Stage': 'Original Data',
+        'Description': 'All alerts from Fink broker',
+        'N_Candidates': n_alerts_year, # the Fink transfer data was already pre-filtered
+        'Candidates_per_Month': n_alerts_year / 12,
+        'Efficiency_vs_Previous': 100.0,
+        'Efficiency_vs_Original': 100.0,
+        'Percentage_of_Yearly': n_alerts_year / n_alerts_year * 100,
+        'Top3_Finkclasses': top3_orig
+    })
+    
+    previous_count = n_alerts_year
+    original_count = n_alerts_year
+    
+    # Process each filtering stage
+    for stage_name, df_stage, description in filtering_stages:
+        current_count = len(df_stage)
+        top3_classes = get_top3_finkclasses(df_stage)
+        
+        stats_data.append({
+            'Stage': stage_name,
+            'Description': description,
+            'N_Candidates': current_count,
+            'Candidates_per_Month': current_count / 12,
+            'Efficiency_vs_Previous': (current_count / previous_count * 100) if previous_count > 0 else 0,
+            'Efficiency_vs_Original': (current_count / original_count * 100) if original_count > 0 else 0,
+            'Percentage_of_Yearly': current_count / n_alerts_year * 100,
+            'Top3_Finkclasses': top3_classes
+        })
+        
+        previous_count = current_count
+    
+    return pd.DataFrame(stats_data)
+
+
+

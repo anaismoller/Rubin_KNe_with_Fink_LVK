@@ -16,7 +16,8 @@ dependencies = [
     "Jinja2",
     "pyarrow",
     "fastparquet",
-    "fink-utils"
+    "fink-utils",
+    "nbformat"
 ]
 
 
