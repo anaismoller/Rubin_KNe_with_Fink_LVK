@@ -1,6 +1,8 @@
 # Strategy for identifying Vera C. Rubin Observatory kilonova candidates with Fink broker
 
-Code to reproduce results of "Strategy for identifying Vera C. Rubin Observatory kilonova candidates for targeted gravitational-wave searches".
+Code to reproduce results of "Strategy for identifying Vera C. Rubin Observatory kilonova candidates for targeted gravitational-wave searches" (Stevenson, Möller, Powell 2025) [![arXiv](https://img.shields.io/badge/arxiv-astro--ph%2F1901.06384-red)](https://arxiv.org/abs/2510.12932).
+
+
 
 - `0.analysis_estimates_ocean_oneyear.ipynb`: KNe estimates for one year of Rubin LSST
 - `1a.analysis_broker_ocean.ipynb`: results from broker alerts for ocean observing strategy (v.5)
